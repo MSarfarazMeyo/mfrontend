@@ -53,7 +53,7 @@ export default function SignIn() {
     if (res.data.status === 401 || !res.data) {
       console.log("errror");
     } else {
-      setData(res.data.data[0]);
+      setData(res.data.admindata[0]);
     }
   };
 
@@ -61,7 +61,7 @@ export default function SignIn() {
     getUserData();
   }, []);
 
-  console.log(data.email);
+  console.log(data);
 
   const [email, setemail] = React.useState();
   const [password, setpassword] = React.useState();

@@ -1,50 +1,122 @@
 import { Box } from "@mui/system";
 import TextField from "@mui/material/TextField";
-import React, { useContext, useState } from "react";
-import { Typography, Button } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {
+  Typography,
+  Button,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  IconButton,
+} from "@mui/material";
 import Mycontext from "../context/Mycontext";
-
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { SketchPicker } from "react-color";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import { Metaplex } from "@metaplex-foundation/js";
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import * as SPLToken from "@solana/spl-token";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 
 const SidebarBody2 = () => {
   const context = useContext(Mycontext);
   const {
-    yourappname,
-    yourappheadline,
-    yourappcaption,
-    yourappsubdomain,
-    yourapplogo,
-    yourapplogo2,
-    yourappthemecolor,
-    yourappthememode,
-    yourapporientation,
+    candymachin,
+    candymachinmethod,
+    verified,
+    tokenfromwalletmethod,
+    dailyrewardmethod,
+    nftperdaymethod,
+    emailmethod,
   } = context;
-  // const [state, setstate] = React.useState({
-  //   appname: "",
-  //   appheadline: "",
-  //   appcaption: "",
-  //   subdomain: "domain",
-  // });
 
-  const [appname, setappname] = useState("");
-  const [appheadline, setappheadline] = useState("");
-  const [appcaption, setappcaption] = useState("");
-  const [subdomain, setsubdomain] = useState("");
-  const [image, setImage] = useState(null);
-  const [imageurl, setImageurl] = useState(null);
+  const [em1, setem1] = useState(false);
+  const [em2, setem2] = useState(false);
+  const [em3, setem3] = useState(true);
+  const [email, setemail] = useState("");
+  const [email1, setemail1] = useState("");
+  const [email2, setemail2] = useState("");
+  const [cmid, setcmid] = useState("");
+  const [dsable, setdsable] = useState(true);
+  const { wallet, publicKey } = useWallet();
+  const [splTokens, setSplTokens] = useState();
+  const [candyNfts, setCandyNfts] = useState([]);
+  const [verify, setverify] = useState(false);
+  const [show, setshow] = useState(false);
 
-  const [currentcolor, setcurrentcolor] = useState("#ff6");
-  const [backGroundColor, setBackGroundColor] = useState("");
-  const [picker, setpicker] = useState(false);
-  const handlesketchpicker = () => {
-    setpicker(true);
+  const [nftperday, setnftperday] = useState();
+
+  const connection = new Connection(clusterApiUrl("devnet"));
+  const metaplex = new Metaplex(connection);
+
+  const getNfts = async () => {
+    console.log("working");
+    if (publicKey) {
+      console.log(" my public key", publicKey.toString());
+
+      const tokens = await connection.getTokenAccountsByOwner(publicKey, {
+        programId: TOKEN_PROGRAM_ID,
+      });
+
+      const nfts = await metaplex.nfts().findAllByCreator({
+        creator: new PublicKey("3oks3FULunJG1DHvDAk6L5tVVuPQbMmsjsPzYXvXT35z"),
+      });
+
+      setCandyNfts(nfts);
+
+      console.log(nfts, "candynfts");
+
+      console.log(tokens, "tokens aa");
+      setSplTokens(tokens);
+    }
   };
 
-  const handlechange = (color) => {
-    setcurrentcolor(color.hex);
-    yourappthemecolor(color.hex);
+  React.useEffect(() => {
+    getNfts();
+  }, [wallet, publicKey, candymachin]);
+
+  const handleemail = (event) => {
+    setemail(event.target.value);
+    emailmethod(event.target.value);
   };
+
+  const handlenft = (event) => {
+    setnftperday(event.target.value);
+    nftperdaymethod(event.target.value);
+  };
+
+  const handleemail1 = (event) => {
+    setemail1(event.target.value);
+  };
+
+  const handleemail2 = (event) => {
+    setemail2(event.target.value);
+  };
+
+  const handleemailshow = () => {
+    setem1(true);
+    setem3(false);
+  };
+  const handleemailshow2 = () => {
+    setem2(true);
+    setem3(true);
+  };
+
+  const handlecandymachine = () => {
+    if (cmid.length >= 5) {
+      candymachinmethod(cmid);
+    }
+  };
+
+  const handlefileshow = () => {
+    setshow(true);
+  };
+
   const styles = {
     width: "50%",
     border: "1px solid #44327E ",
@@ -71,86 +143,45 @@ const SidebarBody2 = () => {
     },
   };
 
-  const [currentButtonVariant, setCurrentButtonVariant] = useState("outlined");
-  const [currentButtonVariant2, setCurrentButtonVariant2] =
-    useState("contained");
-  const [currentButtonVariant3, setCurrentButtonVariant3] =
-    useState("outlined");
-  const [currentButtonVariant4, setCurrentButtonVariant4] =
-    useState("contained");
+  const [twallet, settwallet] = React.useState("");
+
+  const handleChange = (event) => {
+    settwallet(event.target.value);
+    tokenfromwalletmethod(event.target.value);
+  };
 
   const handleChange1 = (event) => {
-    setappname(event.target.value);
-    yourappname(event.target.value);
-  };
-
-  const handleChange2 = (event) => {
-    setappheadline(event.target.value);
-    yourappheadline(event.target.value);
-  };
-
-  const handleChange3 = (event) => {
-    setappcaption(event.target.value);
-    yourappcaption(event.target.value);
-  };
-
-  const handleChange4 = (event) => {
-    setsubdomain(event.target.value);
-    yourappsubdomain(event.target.value);
-  };
-
-  const handlelogo = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImageurl(event.target.files[0]);
-      setImage(URL.createObjectURL(event.target.files[0]));
-    }
-  };
-  yourapplogo(imageurl);
-  yourapplogo2(image);
-
-  const handleButtonVariantChange = () => {
-    yourappthememode("light");
-    if (currentButtonVariant === "outlined") {
-      setCurrentButtonVariant("contained");
-      setCurrentButtonVariant2("outlined");
-    } else {
-      setCurrentButtonVariant("outlined");
-      setCurrentButtonVariant2("outlined");
-    }
-  };
-  const handleButtonVariantChange2 = () => {
-    yourappthememode("dark");
-    if (currentButtonVariant === "outlined") {
-      setCurrentButtonVariant2("contained");
-      setCurrentButtonVariant("outlined");
-    } else {
-      setCurrentButtonVariant2("contained");
-      setCurrentButtonVariant("outlined");
+    setcmid(event.target.value);
+    if (event.target.value.length >= 5) {
+      setdsable(false);
+    } else if (event.target.value.length <= 4) {
+      setdsable(true);
     }
   };
 
-  const handlehorizontel = () => {
-    yourapporientation(false);
+  React.useEffect(() => {
+    const fetchToken = async () => {
+      if (splTokens) {
+        splTokens.value.forEach(async (token) => {
+          console.log(token.pubkey.toBase58());
+          const accountData = await connection.getAccountInfo(token.pubkey);
+          console.log(accountData, "account data");
 
-    if (currentButtonVariant === "outlined") {
-      setCurrentButtonVariant3("contained");
-      setCurrentButtonVariant4("outlined");
-    } else {
-      setCurrentButtonVariant3("outlined");
-      setCurrentButtonVariant4("outlined");
-    }
-  };
-  const handlevertical = () => {
-    yourapporientation(true);
+          const accountInfo = SPLToken.AccountLayout.decode(accountData.data);
+          console.log(`mint: ${new PublicKey(accountInfo.mint)}`);
+          console.log(accountInfo, "account info");
+          let tokenmetaPubkey = await Metadata.data(
+            new PublicKey(accountInfo.mint)
+          );
 
-    if (currentButtonVariant === "outlined") {
-      setCurrentButtonVariant4("contained");
-      setCurrentButtonVariant3("outlined");
-    } else {
-      setCurrentButtonVariant4("outlined");
-      setCurrentButtonVariant3("outlined");
-    }
-  };
+          const tokenmeta = await Metadata.load(connection, tokenmetaPubkey);
+          console.log(tokenmeta, "token meta");
+          // console.log(`amount: ${SPLToken.u64.fromBuffer(accountInfo.amount)}`);
+        });
+      }
+    };
+    fetchToken();
+  }, [splTokens]);
 
   return (
     <div>
@@ -213,35 +244,33 @@ const SidebarBody2 = () => {
               sx={{
                 width: "45%",
                 mt: 1,
+
                 background: "#36454F",
                 borderBottom: "2px solid #44327E",
                 borderRadius: "2px",
                 fontFamily: "Poppins",
               }}
               id="outlined-name"
-              label="Project Name"
+              label="enter candy machine id"
               variant="outlined"
-              name="appname"
-              value={appname}
+              name="candy machine Id"
+              value={cmid}
               onChange={handleChange1}
             />
-            <TextField
+
+            <Button
+              variant="contained"
+              disabled={dsable}
+              onClick={handlecandymachine}
               sx={{
                 width: "45%",
+                height: "60px",
                 mt: 1,
                 ml: 1,
-                background: "#36454F",
-                borderBottom: "2px solid #44327E",
-                borderRadius: "2px",
-                fontFamily: "Poppins",
               }}
-              id="outlined-name"
-              label="Project Name"
-              variant="outlined"
-              name="appname"
-              value={appname}
-              onChange={handleChange1}
-            />
+            >
+              Verify
+            </Button>
           </Box>
         </Box>
 
@@ -276,7 +305,7 @@ const SidebarBody2 = () => {
             If you would like to issue new tokens, please consult us.
           </Typography>
 
-          <TextField
+          {/* <TextField
             sx={{
               width: "100%",
               mt: 1,
@@ -286,12 +315,29 @@ const SidebarBody2 = () => {
               fontFamily: "Poppins",
             }}
             id="outlined-name"
-            label="Project Name"
+            label="Pride balance"
             variant="outlined"
             name="appname"
             value={appname}
             onChange={handleChange1}
-          />
+          /> */}
+
+          <FormControl fullWidth sx={{ background: "#36454F" }}>
+            <InputLabel id="demo-simple-select-label">
+              Choose a token from your wallet
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={twallet}
+              label="Choose a token from your wallet"
+              onChange={handleChange}
+            >
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         <Box
@@ -325,41 +371,76 @@ const SidebarBody2 = () => {
             Set a general distribution rule for your NFTs. For special rewards,
             upload the hashlist for the specific NFTs to set.
           </Typography>
-          <Box>
-            <TextField
-              sx={{
-                width: "45%",
-                mt: 1,
-                background: "#36454F",
-                borderBottom: "2px solid #44327E",
-                borderRadius: "2px",
-                fontFamily: "Poppins",
-              }}
-              id="outlined-name"
-              label="Project Name"
-              variant="outlined"
-              name="appname"
-              value={appname}
-              onChange={handleChange1}
-            />
-            <TextField
-              sx={{
-                width: "45%",
-                mt: 1,
-                ml: 1,
-                background: "#36454F",
-                borderBottom: "2px solid #44327E",
-                borderRadius: "2px",
-                fontFamily: "Poppins",
-              }}
-              id="outlined-name"
-              label="Project Name"
-              variant="outlined"
-              name="appname"
-              value={appname}
-              onChange={handleChange1}
-            />
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="space-around"
+            mt={2}
+            mb={2}
+          >
+            <Box width="45%">
+              <Typography color="white">NFTs</Typography>
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="space-around"
+                alignItems="center"
+                color="white"
+                bgcolor="#312677"
+              >
+                <Button
+                  sx={{ color: "white" }}
+                  endIcon={<ErrorOutlineIcon fontSize="small" />}
+                >
+                  General NFTs
+                </Button>
+              </Box>
+            </Box>
+            <Box width="45%">
+              <Typography color="white" variant="body1">
+                Rewards
+              </Typography>
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="space-around"
+                alignItems="center"
+                color="white"
+                bgcolor="#36454F"
+              >
+                <TextField
+                  variant="standard"
+                  value={nftperday}
+                  onChange={handlenft}
+                  sx={{
+                    mt: 1,
+                    background: "#36454F",
+                  }}
+                  id="standard-basic"
+                  label=""
+                  name="appname"
+                />
+                <Typography fontSize="15px" color="#A120B7">
+                  Token/Nft/Day
+                </Typography>
+              </Box>
+            </Box>
           </Box>
+
+          {show && verified ? (
+            <Button variant="contained" component="label">
+              Upload
+              <input hidden accept="application/pdf" type="file" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handlefileshow}
+              sx={{ width: "50%", fontSize: "small" }}
+              endIcon={<AddIcon />}
+            >
+              New Rule
+            </Button>
+          )}
         </Box>
 
         <Box
@@ -380,8 +461,7 @@ const SidebarBody2 = () => {
             }}
             variant="body"
           >
-            THE TOKEN TO BE DISTRIBUTED{" "}
-            <span style={{ color: "green" }}> *</span>
+            CONTACT EMAIL（UP TO 3） <span style={{ color: "green" }}> *</span>
           </Typography>
           <Typography
             sx={{
@@ -390,7 +470,8 @@ const SidebarBody2 = () => {
             }}
             variant="body2"
           >
-            If you would like to issue new tokens, please consult us.
+            To receive system notifications in time (eg. Your tokens in vault
+            are insufficient.).
           </Typography>
 
           <TextField
@@ -403,12 +484,78 @@ const SidebarBody2 = () => {
               fontFamily: "Poppins",
             }}
             id="outlined-name"
-            label="Project Name"
+            label="enter email address here"
             variant="outlined"
-            name="appname"
-            value={appname}
-            onChange={handleChange1}
+            name="email"
+            value={email}
+            onChange={handleemail}
           />
+          {em1 ? (
+            <Box display="flex" alignItems="center">
+              <TextField
+                sx={{
+                  width: "90%",
+                  mt: 1,
+                  background: "#36454F",
+                  borderBottom: "2px solid #44327E",
+                  borderRadius: "2px",
+                  fontFamily: "Poppins",
+                }}
+                id="outlined-name"
+                label="enter email address here"
+                variant="outlined"
+                name="email2"
+                value={email1}
+                onChange={handleemail1}
+              />
+              <IconButton onClick={() => setem1(false)}>
+                {" "}
+                <DeleteForeverIcon fontSize="large" sx={{ color: "#36454F" }} />
+              </IconButton>
+            </Box>
+          ) : null}
+          {em2 ? (
+            <Box display="flex" alignItems="center">
+              <TextField
+                sx={{
+                  width: "90%",
+                  mt: 1,
+                  background: "#36454F",
+                  borderBottom: "2px solid #44327E",
+                  borderRadius: "2px",
+                  fontFamily: "Poppins",
+                }}
+                id="outlined-name"
+                label="enter email address here"
+                variant="outlined"
+                name="email3"
+                value={email2}
+                onChange={handleemail2}
+              />
+              <IconButton onClick={() => setem2(false)}>
+                {" "}
+                <DeleteForeverIcon fontSize="large" sx={{ color: "#36454F" }} />
+              </IconButton>
+            </Box>
+          ) : null}
+
+          {em3 ? (
+            <Button
+              onClick={handleemailshow}
+              endIcon={<AddIcon />}
+              sx={{ width: "50%", marginTop: 2 }}
+            >
+              Add New Email
+            </Button>
+          ) : (
+            <Button
+              onClick={handleemailshow2}
+              endIcon={<AddIcon />}
+              sx={{ width: "50%", marginTop: 2 }}
+            >
+              Add New Email
+            </Button>
+          )}
         </Box>
 
         {/* <Box

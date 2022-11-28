@@ -1,9 +1,13 @@
 import { Box, Button, Grid, Paper, Stack, Typography } from "@mui/material";
-import { createTheme,ThemeProvider } from '@mui/material/styles';
-import React, { useContext } from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
 import Mycontext from "../../context/Mycontext";
+import { Metaplex } from "@metaplex-foundation/js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import Appbar from "../../views/Appbar";
-import "../style.css"
+import "../style.css";
+import NftData from "./NftData";
 const Homepage = () => {
   const context = useContext(Mycontext);
   const {
@@ -13,20 +17,52 @@ const Homepage = () => {
     yourappcaption,
     themecolor,
     orientation,
+    candymachin,
+    verifiedmethod,
   } = context;
-     const clr=themecolor;
-     const theme = createTheme({
-      palette: {
-     
-        secondary: {
-          
-          main: themecolor,
-         
-        },
+
+  const [candyNfts, setCandyNfts] = useState([]);
+  const [hasnfts, sethasnfts] = useState(false);
+  const { wallet, publicKey } = useWallet();
+  const connection = new Connection(clusterApiUrl("devnet"));
+  const metaplex = new Metaplex(connection);
+
+  const getNfts = async () => {
+    if (publicKey && candymachin) {
+      const nfts = await metaplex.nfts().findAllByCreator({
+        creator: new PublicKey(candymachin),
+        position: 1,
+      });
+
+      console.log("nftlength", nfts);
+
+      if (nfts.length > 0) {
+        setCandyNfts(nfts);
+        sethasnfts(true);
+        verifiedmethod(true);
+      } else {
+        sethasnfts(false);
+      }
+    }
+  };
+  React.useEffect(() => {
+    getNfts();
+  }, [wallet, publicKey, candymachin]);
+
+  console.log(candymachin, "machine");
+  console.log(candyNfts, "çandy nfts");
+
+  const clr = themecolor;
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: themecolor,
       },
-      "&.MuiButton-contained:hover":{
-          background:themecolor
-    },});
+    },
+    "&.MuiButton-contained:hover": {
+      background: themecolor,
+    },
+  });
   var w1 = 5;
   var w2 = 4;
   var w3 = 3;
@@ -42,11 +78,12 @@ const Homepage = () => {
   yourappheadline(headline);
   yourappcaption(caption);
   return (
-    
     <Paper>
-      
-      <Grid container direction={dir} sx={{border:"2px solid #4e39d7",height:"100%",width:"100%"}} >
-        
+      <Grid
+        container
+        direction={dir}
+        sx={{ border: "2px solid #4e39d7", height: "100%", width: "100%" }}
+      >
         <Grid
           item
           md={w1}
@@ -56,92 +93,73 @@ const Homepage = () => {
             flexDirection: "column",
             alignItems: "center",
             height: "80%",
-             paddingBottom:"2rem",
+            paddingBottom: "2rem",
             p: 4,
           }}
           className="main-g"
         >
           <ThemeProvider theme={theme}>
-          <Box mt={4}>
-            <Typography
-              variant="h6"
-              sx={{ fontSize:"", fontFamily:"Poppins",fontWeight: "bold", mb: 2 , display: { xs: "100%" } }}
-            >
-              {headline}
-            </Typography>
-          </Box>
-          <Box mt={4}>
-            <Typography variant="body" sx={{fontFamily:"Poppins",}}>{caption}</Typography>
-          </Box>
-          <Box mt={4}>
-            <Button variant="contained" color="secondary" sx={{color:"white",fontFamily:"Poppins"}}>
-              connect wallet
-            </Button>
-          </Box>
+            <Box mt={4}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "",
+                  fontFamily: "Poppins",
+                  fontWeight: "bold",
+                  mb: 2,
+                  display: { xs: "100%" },
+                }}
+              >
+                {headline}
+              </Typography>
+            </Box>
+            <Box mt={4}>
+              <Typography variant="body" sx={{ fontFamily: "Poppins" }}>
+                {caption}
+              </Typography>
+            </Box>
+            <Box mt={4}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ color: "white", fontFamily: "Poppins" }}
+              >
+                connect wallet
+              </Button>
+            </Box>
           </ThemeProvider>
         </Grid>
 
-        <Grid item md={w2} xs={12}>
-          <Paper elevation={3}>
+        <Grid item md={w2} xs={12} height="100%" overflow="hidden">
+          {/* <Box width="100%" height="300px">
+            <marquee direction="up">
+
+            </marquee>
+          </Box> */}
+          {hasnfts ? (
+            candyNfts && candyNfts.map((elem) => <NftData data={elem} />)
+          ) : (
             <Box
-              sx={{
-                mt: 4,
-                height: "120px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              width="100%"
+              height="150px"
+              display="flex"
+              flexDirection="column"
             >
-              <Typography variant="h6" sx={{fontFamily:"Poppins",}} color={themecolor}>
-                your Nfc goes here
+              <Box
+                width="100%"
+                height="80%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Typography textAlign="center" fontWeight="bold">
+                  Your NFTs goes here
+                </Typography>
+              </Box>
+              <Typography width="100%" height="20%">
+                Nft Name
               </Typography>
             </Box>
-          </Paper>
-          <Typography mt={1} variant="h6" sx={{fontFamily:"Poppins",}}>
-            NFT #034464
-          </Typography>
-          <hr />
-          <Paper elevation={3}>
-            <Box
-              sx={{
-                mt: 4,
-                height: "120px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{fontFamily:"Poppins",}} color={themecolor}>
-                your Nfc goes here
-              </Typography>
-            </Box>
-          </Paper>
-          <Typography mt={1} variant="h6" sx={{fontFamily:"Poppins",}}>
-            NFT #034464
-          </Typography>
-          <hr />
-          <Paper elevation={3}>
-            <Box
-              sx={{
-                mt: 4,
-                height: "120px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{fontFamily:"Poppins",}} color={themecolor}>
-                your Nfc goes here
-              </Typography>
-            </Box>
-          </Paper>
-          <Typography mt={1} variant="h6" sx={{fontFamily:"Poppins",}}>
-            NFT #034464
-          </Typography>
-          <hr />
+          )}
         </Grid>
 
         <Grid item md={w3} xs={12}>
@@ -229,9 +247,7 @@ const Homepage = () => {
           </Box>
         </Grid>
       </Grid>
-     
     </Paper>
- 
   );
 };
 

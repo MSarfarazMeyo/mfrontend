@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Appbar from "./views/Appbar";
 import ContextStore from "./context/ContextStore";
 import {
@@ -14,17 +14,28 @@ import Test2 from "./Test2";
 import AdminHome from "./admin/AdminHome";
 import BlogPost from "./admin/Components/BodyComponent/BlogPost";
 import Link1 from "./admin/Components/BodyComponent/Link1";
-
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 import Notification from "./admin/Components/Header/ActionTab/Notification";
 import Dashboard from "./admin/Components/BodyComponent/Dashboard/Dashboard";
 import HearderComponent from "./admin/Components/Header/HearderComponent";
 import SignIn from "./admin/SignIn";
 import Mycontext from "./context/Mycontext";
 import Logoutmodel from "./admin/Logoutmodel";
+import NewSitePage from "./views/NewSitePage";
+import ConnectPage from "./components/ConnectPage";
+import LandingPage from "./components/LandingPage";
 
 const App = () => {
   console.log(localStorage.getItem("status"));
   var adminlogedin = localStorage.getItem("status");
+
+  const { wallet, publicKey } = useWallet();
+  const [walletid, setwalletid] = useState(publicKey?.toString());
+
+  useEffect(() => {
+    setwalletid(publicKey?.toString());
+  }, [publicKey]);
 
   // const CustomRoutes = [
   //   { path: "" },
@@ -39,7 +50,13 @@ const App = () => {
     <Router>
       <ContextStore>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />}>
+            <Route
+              index
+              element={walletid ? <ConnectPage /> : <LandingPage />}
+            />
+            <Route path="create" element={<NewSitePage />} />
+          </Route>
           <Route path="/appdata" element={<Test />} />
           <Route exact path="admin/login" element={<SignIn />} />
 

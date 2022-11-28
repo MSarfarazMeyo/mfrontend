@@ -14,8 +14,37 @@ const ContextStore = ({ children }) => {
   const [thememode, setthememode] = useState("light");
   const [orientation, setorientation] = useState(true);
   const [mobileview, setmobileview] = useState(true);
-
+  const [verified, setverified] = useState(false);
+  const [candymachin, setcandymachin] = useState();
+  const [tokenfromwallet, settokenfromwallet] = useState();
+  const [nftperday, setnftperday] = useState();
+  const [dailyreward, setdailyreward] = useState("");
+  const [email, setemail] = useState();
   const [adminlogedin, setadminlogedin] = useState(false);
+
+  const nftperdaymethod = (val) => {
+    setnftperday(val);
+  };
+
+  const dailyrewardmethod = (val) => {
+    setdailyreward(val);
+  };
+
+  const emailmethod = (val) => {
+    setemail(val);
+  };
+
+  const tokenfromwalletmethod = (val) => {
+    settokenfromwallet(val);
+  };
+
+  const verifiedmethod = (val) => {
+    setverified(val);
+  };
+
+  const candymachinmethod = (val) => {
+    setcandymachin(val);
+  };
 
   const adminmethod = (value) => {
     setadminlogedin(value);
@@ -79,6 +108,18 @@ const ContextStore = ({ children }) => {
         yourappmobileview,
         adminlogedin,
         adminmethod,
+        candymachin,
+        candymachinmethod,
+        verified,
+        verifiedmethod,
+        tokenfromwallet,
+        tokenfromwalletmethod,
+        dailyreward,
+        dailyrewardmethod,
+        nftperday,
+        nftperdaymethod,
+        email,
+        emailmethod,
       }}
     >
       {children}

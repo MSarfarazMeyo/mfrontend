@@ -2,6 +2,8 @@ import { Box } from "@mui/system";
 import React, { useContext, useState } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { Button, IconButton, Typography } from "@mui/material";
+import { PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { Link } from "react-router-dom";
 import SidebarBody from "./SidebarBody";
 import Mycontext from "../context/Mycontext";
@@ -12,6 +14,12 @@ import { useEffect } from "react";
 const Sidebar = () => {
   const context = useContext(Mycontext);
   const [Error, setError] = useState();
+  const { publicKey } = useWallet();
+  const [wallet, setwallet] = useState();
+
+  useEffect(() => {
+    setwallet(publicKey?.toString());
+  }, [publicKey]);
 
   const styles = {
     width: "100%",
@@ -28,8 +36,19 @@ const Sidebar = () => {
     },
   };
 
-  const { name, logo, headline, caption, subdomain, themecolor, thememode } =
-    context;
+  const {
+    name,
+    logo,
+    headline,
+    caption,
+    subdomain,
+    themecolor,
+    candymachin,
+    tokenfromwallet,
+    dailyreward,
+    nftperday,
+    email,
+  } = context;
 
   const [nextpage, setnextpage] = useState(false);
 
@@ -50,12 +69,34 @@ const Sidebar = () => {
   //   }
   // };
 
-  const handleSubmit = async (e) => {
+  const nextstep = (e) => {
     e.preventDefault();
-    setnextpage(true);
-    var formData = new FormData();
 
-    formData.append("apptheme", thememode);
+    if (logo == null) {
+      alert("logo required");
+    } else if (name == "AppName" || name == "") {
+      alert("App Naem Required");
+    } else if (
+      headline == "Your website headlines goes here" ||
+      headline == ""
+    ) {
+      alert("App headline required");
+    } else if (
+      caption == "the caption of your website goes here ." ||
+      caption == ""
+    ) {
+      alert("App Caption required");
+    } else if (subdomain == "subdomain" || caption == "") {
+      alert("subdomain required");
+    } else {
+      setnextpage(true);
+    }
+  };
+
+  const submitdata = async (e) => {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("wallet", wallet);
     formData.append("applogo", logo);
     formData.append("appname", name);
     formData.append("appcolor", themecolor);
@@ -63,20 +104,27 @@ const Sidebar = () => {
     formData.append("appcaption", caption);
     formData.append("appsubdomain", subdomain);
 
+    formData.append("candymachineid", candymachin);
+    formData.append("tokenfromwallet", tokenfromwallet);
+    formData.append("nfts", nftperday);
+    formData.append("rewards", dailyreward);
+    formData.append("contactemails", email);
+
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     };
 
-    const res = await axios.post("http://localhost:5000/api", formData, config);
-    // console.log(res.message)
-    if (res.data.status === 404 || res.data.status === 500 || !res.data) {
-      alert(" Error");
-      setError(res.message);
-      console.log("not added");
-    } else {
-    }
+    await axios
+      .post("http://localhost:5000/api", formData, config)
+      .then((res) => {
+        console.log(res);
+        alert("data added successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // const sendRequest = async () => {
@@ -202,9 +250,16 @@ const Sidebar = () => {
         sx={{ height: "20%", width: "80%", bottom: 0, borderColor: "white" }}
       >
         <Typography>
-          <Button sx={styles} variant="contained" onClick={handleSubmit}>
-            Next Step
-          </Button>
+          {nextpage ? (
+            <Button sx={styles} variant="contained" onClick={submitdata}>
+              Publish
+            </Button>
+          ) : (
+            <Button sx={styles} variant="contained" onClick={nextstep}>
+              Next Step
+            </Button>
+          )}
+
           {Error && <Box sx={{ width: "80%", height: "20%" }}>{Error}</Box>}
           <Button mt={1} href="/appdata">
             check Db Data
