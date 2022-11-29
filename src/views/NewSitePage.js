@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Grid, Toolbar, Typography, Box } from "@mui/material";
-import UserHome from "../yourapp/UserHome";
+import UserHome from "../create_new_app/UserHome";
 import Sidebar from "../components/Sidebar";
 
 const NewSitePage = () => {

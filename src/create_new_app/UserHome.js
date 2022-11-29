@@ -11,7 +11,7 @@ import { Button, IconButton } from "@mui/material";
 import StayPrimaryLandscapeIcon from "@mui/icons-material/StayPrimaryLandscape";
 import MobileScreenShareIcon from "@mui/icons-material/MobileScreenShare";
 import Mycontext from "../context/Mycontext";
-import "../yourapp/style.css"
+import "./style.css";
 export default function UserHome() {
   const context = React.useContext(Mycontext);
   const { yourapporientation, yourappmobileview, mobileview } = context;
@@ -22,45 +22,35 @@ export default function UserHome() {
     paddingLeft: "50px",
     paddingRight: "50px",
     paddingTop: "40px",
-
-  }
+  };
   let styles2 = {
     color: "white",
-    ms: 2
-
-  }
+    ms: 2,
+  };
   let style3 = {
     color: "#C615A9",
-    ms: 2, me: 2,
-  }
-  if (mobileview ) {
+    ms: 2,
+    me: 2,
+  };
+  if (mobileview) {
     widthh = "400px";
     alignn = "center";
     const styles1 = {
       paddingLeft: "0px",
       paddingRight: "0px",
       paddingTop: "0px",
-     
-
-    }
+    };
     const style4 = {
-      color: "#C615A9"
-    }
+      color: "#C615A9",
+    };
     const style5 = {
       color: "white",
-      
-    }
+    };
     style3 = style5;
     styles2 = style4;
 
     style = styles1;
-
-
-
   }
-  
-
-
 
   const [value, setValue] = React.useState("1");
 
@@ -71,15 +61,13 @@ export default function UserHome() {
   const [currentButtonVariant2, setCurrentButtonVariant2] =
     React.useState("contained");
 
-
-
-
   const styles = {
     width: "50%",
     heigth: "",
     border: "1px solid #44327E ",
     "&.MuiButton-contained": {
-      background: " linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)",
+      background:
+        " linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)",
       color: "white",
     },
     "&.MuiButton-outlined": {
@@ -88,9 +76,8 @@ export default function UserHome() {
     },
     "&.MuiButton-outlined:hover": {
       color: "#6D6DFC",
-    }
-
-  }
+    },
+  };
   const handleButtonVariantChange = () => {
     sethomepage(false);
     if (currentButtonVariant === "outlined") {
@@ -136,7 +123,7 @@ export default function UserHome() {
           justifyContent: "space-between",
         }}
       >
-        <Box className="homep" >
+        <Box className="homep">
           <Button
             variant={currentButtonVariant2}
             onClick={handleButtonVariantChange2}
@@ -152,15 +139,9 @@ export default function UserHome() {
             Dashboard
           </Button>
         </Box>
-        <Box  className="m12" sx={{ paddingRight: "1.5rem" }}>
-
-
-          <IconButton
-            onClick={handlelandscap}
-            className="m12"
-            sx={style3}
-          >
-            <StayPrimaryLandscapeIcon  />
+        <Box className="m12" sx={{ paddingRight: "1.5rem" }}>
+          <IconButton onClick={handlelandscap} className="m12" sx={style3}>
+            <StayPrimaryLandscapeIcon />
           </IconButton>
 
           <IconButton onClick={handlemobile} sx={styles2}>
@@ -168,17 +149,15 @@ export default function UserHome() {
           </IconButton>
         </Box>
       </Box>
-      <Box sx={
-        {
+      <Box
+        sx={{
           width: "100%",
           display: "flex",
           justifyContent: "center",
-
-
-        }
-      }>
+        }}
+      >
         {homepage ? (
-          <Box width={widthh} className="homep1" sx={style} >
+          <Box width={widthh} className="homep1" sx={style}>
             <Layout body={<Homepage />} />
           </Box>
         ) : (

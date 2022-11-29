@@ -1,0 +1,85 @@
+.home {
+  color: #002884;
+}
+.homep {
+  width: 40%;
+  margin-left: 1rem;
+}
+.dash-main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.dash-mainl {
+  border: 2px solid #6d6dfc;
+  width: 50%;
+  flex-direction: column;
+}
+.dash-mainl {
+  border: 2px solid #6d6dfc;
+  width: 100%;
+}
+
+@media (max-width: 500px) {
+  .homep {
+    width: 60%;
+  }
+  .dash {
+    flex-direction: column;
+  }
+  .num {
+    display: none;
+  }
+  .m12 {
+    display: none;
+  }
+
+  .homep1 {
+    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+  }
+  .main-g {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+  }
+  .dash-main {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+@media (max-width: 380px) {
+  .icon2 {
+    display: none;
+  }
+  .m12 {
+    display: none;
+  }
+}
+@media (max-width: 450px) {
+  .icon2 {
+    display: none;
+  }
+  .m12 {
+    display: none;
+  }
+  .dash-main-r {
+    border: 2px solid #6d6dfc;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.scrolldata {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

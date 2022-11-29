@@ -25,6 +25,9 @@ import Logoutmodel from "./admin/Logoutmodel";
 import NewSitePage from "./views/NewSitePage";
 import ConnectPage from "./components/ConnectPage";
 import LandingPage from "./components/LandingPage";
+import UserHome from "./user_app/user_home/components/UserHome";
+import StackingDashboard from "./user_app/user_home/Pages/StackingDashboard";
+import StackingHome from "./user_app/user_home/Pages/StackingHome";
 
 const App = () => {
   console.log(localStorage.getItem("status"));
@@ -59,7 +62,12 @@ const App = () => {
           </Route>
           <Route path="/appdata" element={<Test />} />
           <Route exact path="admin/login" element={<SignIn />} />
-
+          <Route path="/user/home" element={<UserHome />}>
+            <Route
+              index
+              element={walletid ? <StackingDashboard /> : <StackingHome />}
+            />
+          </Route>
           <Route
             path={"/admin"}
             element={

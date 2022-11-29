@@ -34,7 +34,7 @@ const ConnectPage = () => {
         justifyContent="center"
         height="60%"
       >
-        <Link href="create">
+        <Link href="create" style={{ textDecoration: "none" }}>
           <Box
             width="400px"
             height="100%"
@@ -55,10 +55,12 @@ const ConnectPage = () => {
           alignItems="center"
           border={1}
         >
-          <Button variant="contained" width="50%" p={2}>
-            {" "}
-            My Stacking Site
-          </Button>
+          <Link href="/user/home" style={{ textDecoration: "none" }}>
+            <Button variant="contained" width="50%" p={2}>
+              {" "}
+              My Stacking Site
+            </Button>
+          </Link>
           <Button
             sx={{ marginTop: "10px" }}
             variant="contained"

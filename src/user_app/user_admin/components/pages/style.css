@@ -1,0 +1,28 @@
+.nft-p1{
+    font-size: 14px;
+    font-weight: 500;
+    font-family: WorkSans,sans-serif;
+    color:white;
+}
+.nft-p2{
+    font-size: 32px;
+    font-weight: 500;
+    font-family: WorkSans,sans-serif;
+    color:white;
+    
+    margin-top: 12px;
+}
+.nft-p3{
+    font-size: 14px;
+    font-weight: 500;
+    font-family: WorkSans,sans-serif;
+    color:white;
+    font-style: normal;
+    
+    text-transform: uppercase;
+}
+
+.nft-p4{
+  font-size: 14px;
+
+}
