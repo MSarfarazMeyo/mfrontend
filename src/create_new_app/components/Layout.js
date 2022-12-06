@@ -11,6 +11,7 @@ import {
 import { Box } from "@mui/system";
 import Footer from "./Footer";
 import Mycontext from "../../context/Mycontext";
+import { amber, deepOrange, grey } from "@mui/material/colors";
 
 const Layout = ({ body }) => {
   const context = useContext(Mycontext);
@@ -19,19 +20,22 @@ const Layout = ({ body }) => {
   const theme = createTheme({
     palette: {
       mode: thememode,
+      ...(thememode === "dark" && {
+        background:
+          " linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)",
+      }),
     },
   });
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-
       <Box
+        bgcolor=" linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)"
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "73vh",
-          backgroundColor: "#14121F",
+
           border: 1,
           m: 1,
           borderColor: "#ADD8E6",
@@ -39,18 +43,18 @@ const Layout = ({ body }) => {
         }}
       >
         {" "}
-        <Box>
+        <Box bgcolor=" linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)">
           <Paper>
             <Header />
           </Paper>
           <hr />
         </Box>
         <Box
-          backgroundColor={themecolor}
+          bgcolor=" linear-gradient(100.86deg, #4E39D7 14.47%, #C615A9 123.62%)"
           width="100%"
           alignSelf="center"
           sx={{
-            height: "80%",
+            height: "79%",
             overflowY: "scroll",
 
             "&::-webkit-scrollbar": {
@@ -67,14 +71,15 @@ const Layout = ({ body }) => {
             },
           }}
         >
-          {body}
+          {" "}
+          <Paper square>{body}</Paper>
         </Box>
         <hr />
-        <Paper>
-          <Box sx={{ height: "20%", width: "100%", bottom: 0 }}>
+        <Box>
+          <Paper square>
             <Footer />
-          </Box>
-        </Paper>
+          </Paper>
+        </Box>
       </Box>
     </ThemeProvider>
   );

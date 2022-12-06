@@ -48,6 +48,18 @@ const Sidebar = () => {
     dailyreward,
     nftperday,
     email,
+    appnameerrormethod,
+    headlineerrormethod,
+    domainerrormethod,
+    logoerrormethod,
+
+    candymachinerrormethod,
+
+    tokenfromwalleterrormethod,
+
+    dailyrewarderrormethod,
+
+    emailerrormethod,
   } = context;
 
   const [nextpage, setnextpage] = useState(false);
@@ -73,21 +85,16 @@ const Sidebar = () => {
     e.preventDefault();
 
     if (logo == null) {
-      alert("logo required");
+      logoerrormethod(true);
     } else if (name == "AppName" || name == "") {
-      alert("App Naem Required");
+      appnameerrormethod(true);
     } else if (
       headline == "Your website headlines goes here" ||
       headline == ""
     ) {
-      alert("App headline required");
-    } else if (
-      caption == "the caption of your website goes here ." ||
-      caption == ""
-    ) {
-      alert("App Caption required");
+      headlineerrormethod(true);
     } else if (subdomain == "subdomain" || caption == "") {
-      alert("subdomain required");
+      domainerrormethod(true);
     } else {
       setnextpage(true);
     }
@@ -95,36 +102,52 @@ const Sidebar = () => {
 
   const submitdata = async (e) => {
     e.preventDefault();
-    var formData = new FormData();
-    formData.append("wallet", wallet);
-    formData.append("applogo", logo);
-    formData.append("appname", name);
-    formData.append("appcolor", themecolor);
-    formData.append("appheadline", headline);
-    formData.append("appcaption", caption);
-    formData.append("appsubdomain", subdomain);
 
-    formData.append("candymachineid", candymachin);
-    formData.append("tokenfromwallet", tokenfromwallet);
-    formData.append("nfts", nftperday);
-    formData.append("rewards", dailyreward);
-    formData.append("contactemails", email);
+    console.log("working submit");
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
+    if (candymachin == "") {
+      candymachinerrormethod(true);
+      console.log("candy");
+    } else if (tokenfromwallet == null) {
+      tokenfromwalleterrormethod(true);
+      console.log("toke");
+    } else if (email == "") {
+      emailerrormethod(true);
+      console.log("email");
+    } else {
+      console.log("working submit else");
 
-    await axios
-      .post("http://localhost:5000/api", formData, config)
-      .then((res) => {
-        console.log(res);
-        alert("data added successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      var formData = new FormData();
+      formData.append("wallet", wallet);
+      formData.append("applogo", logo);
+      formData.append("appname", name);
+      formData.append("appcolor", themecolor);
+      formData.append("appheadline", headline);
+      formData.append("appcaption", caption);
+      formData.append("appsubdomain", subdomain);
+
+      formData.append("candymachineid", candymachin);
+      formData.append("tokenfromwallet", tokenfromwallet);
+      formData.append("nfts", nftperday);
+      formData.append("rewards", dailyreward);
+      formData.append("contactemails", email);
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      await axios
+        .post("http://localhost:5000/api", formData, config)
+        .then((res) => {
+          console.log(res);
+          alert("data added successfully");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   // const sendRequest = async () => {
@@ -206,7 +229,7 @@ const Sidebar = () => {
       >
         <Typography sx={{ color: "#ffffff", mt: 2 }}>
           <IconButton
-            sx={{ color: "#ffffff", mt: 2 }}
+            sx={{ color: "#ffffff" }}
             onClick={() => setnextpage(false)}
           >
             <ArrowBackIosNewIcon />
@@ -259,11 +282,6 @@ const Sidebar = () => {
               Next Step
             </Button>
           )}
-
-          {Error && <Box sx={{ width: "80%", height: "20%" }}>{Error}</Box>}
-          <Button mt={1} href="/appdata">
-            check Db Data
-          </Button>
         </Typography>
         <Box
           sx={{

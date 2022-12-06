@@ -16,7 +16,7 @@ const NewSitePage = () => {
       <Grid
         item
         sx={{
-          height: "100vh",
+          height: "90vh",
           borderRight: "0.1em solid #44327E",
           background: "#1B194B",
         }}
@@ -32,7 +32,7 @@ const NewSitePage = () => {
 
       <Grid
         item
-        sx={{ height: "100vh", pl: 2, pr: 2 }}
+        sx={{ height: "90vh", pl: 2, pr: 2 }}
         xl={8}
         lg={8}
         md={6}

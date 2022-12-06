@@ -37,7 +37,12 @@ const Appbar = () => {
             }}
           >
             <Box className="main-l" sx={{ width: "100%" }}>
-              <img src={logo1} className="img1" alt="Mekka Stack" />
+              <img
+                src={logo1}
+                sx={{ width: { xs: "50%", md: "70", lg: "100%" } }}
+                className="img1"
+                alt="Mekka Stack"
+              />
             </Box>
 
             <Box className="main-b">

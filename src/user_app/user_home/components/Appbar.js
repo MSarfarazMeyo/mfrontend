@@ -11,9 +11,7 @@ import React, { useContext } from "react";
 import "./style.css";
 import LanguageIcon from "@mui/icons-material/Language";
 import logo1 from "../assets/logo0.png";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import WalletModel from "./WalletModel";
+
 import Mycontext from "../Context/Mycontext";
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -28,9 +26,6 @@ const Appbar = () => {
   // console.log("my connection object", connection);
   // console.log(" my public key", publicKey?.toBase58());
   // console.log("my transaction", sendTransaction);
-  const navigate = useNavigate();
-
-  console.log(name, "appname");
 
   const styles = {
     "&.MuiButton-outlined": {

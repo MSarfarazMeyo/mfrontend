@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import Appbar from "./views/Appbar";
 import ContextStore from "./context/ContextStore";
+import "@fontsource/poppins";
+import "./App.css";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,6 +30,19 @@ import LandingPage from "./components/LandingPage";
 import UserHome from "./user_app/user_home/components/UserHome";
 import StackingDashboard from "./user_app/user_home/Pages/StackingDashboard";
 import StackingHome from "./user_app/user_home/Pages/StackingHome";
+import UserAdmin from "./user_app/user_admin/UserAdmin";
+import AdminDashboard from "./user_app/user_admin/components/pages/Dashboard";
+import NftSetting from "./user_app/user_admin/components/pages/NftSetting";
+
+import TokenDistribution from "./user_app/user_admin/components/TokenDistribution";
+
+import Seo from "./user_app/user_admin/components/pages/sub-pages/Seo";
+
+import Theme from "./user_app/user_admin/components/pages/sub-pages/Theme";
+
+import Admins from "./user_app/user_admin/components/pages/sub-pages/Admin";
+
+import Others from "./user_app/user_admin/components/pages/sub-pages/Other";
 
 const App = () => {
   console.log(localStorage.getItem("status"));
@@ -40,34 +55,23 @@ const App = () => {
     setwalletid(publicKey?.toString());
   }, [publicKey]);
 
-  // const CustomRoutes = [
-  //   { path: "" },
-  //   { path: "dashboard" },
-  //   { path: "blog" },
-  //   { path: "link1" },
-  //   { path: "notification" },
-  //   { path: "logout" },
-  // ];
-
   return (
     <Router>
       <ContextStore>
         <Routes>
           <Route path="/" element={<Home />}>
-            <Route
-              index
-              element={walletid ? <ConnectPage /> : <LandingPage />}
-            />
+            <Route index element={<ConnectPage />} />
             <Route path="create" element={<NewSitePage />} />
           </Route>
           <Route path="/appdata" element={<Test />} />
           <Route exact path="admin/login" element={<SignIn />} />
-          <Route path="/user/home" element={<UserHome />}>
+          <Route path="/user/:id" element={<UserHome />}>
             <Route
               index
               element={walletid ? <StackingDashboard /> : <StackingHome />}
             />
           </Route>
+
           <Route
             path={"/admin"}
             element={
@@ -84,26 +88,16 @@ const App = () => {
             <Route path={"logout"} element={<Logoutmodel />} />
           </Route>
 
-          {/* <Route path="/admin" element={<AdminHome />}>
-            <Route path={`/${LastSegment}`} element={<BlogPost />} />
+          <Route path="/admin/:id" element={<UserAdmin />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="nft-settings" element={<NftSetting />} />
+            <Route path="token-distribution" element={<TokenDistribution />} />
+            <Route path="seo" element={<Seo />} />
+            <Route path="theme" element={<Theme />} />
+            <Route path="admin" element={<Admins />} />
+            <Route path="others" element={<Others />} />
           </Route>
-        </Routes> */}
         </Routes>
-        {/* <Routes>  
-            <Route  exact  path="admin/login" element={<Login/>} />
-            <Route exact path="admin/signup" element={<Signup/>} />
-            <Route path="admin" element={<MainAdmin />} />
-            {/ <Route exact  path="admin" element={userid ? <MainAdmin/> : navigate("admin/login", {replace:"treu"})}/> /}
-            {CustomRoutes.map((cat) => {
-              return (
-                <Route
-                  key={cat}
-                  path={`admin/${cat.path}`}
-                  element={<MainAdmin />}
-                />
-              );
-            })}
-          </Routes> */}
       </ContextStore>
     </Router>
   );

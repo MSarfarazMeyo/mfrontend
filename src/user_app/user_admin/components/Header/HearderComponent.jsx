@@ -1,43 +1,59 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box } from "@material-ui/core";
-
+import axios from "axios";
 import { useStyles } from "./HeaderStyle";
 import NavbarComponent from "./NavbarComponent";
 import Sidenav from "./Sidenav";
-import './style.css';
+import "./style.css";
 import { Outlet } from "react-router-dom";
-
+import Mycontext from "../../Context/Mycontext";
 
 export default function HearderComponent() {
-  // const [LastSegment, setLastSegment] = useState(
-  //   window.location.pathname.split("/").pop()
-  // );
+  const domainname = window.location.pathname.split("/").pop();
 
-  // const [LastSegment2, setLastSegment2] = useState(window.location.pathname);
-  // console.log("lastse", LastSegment);
-  // console.log("lastse2", LastSegment2);
+  const [appdata, setappdata] = useState();
 
-  // let Content = "";
-  // switch (LastSegment) {
-  //   case "dashboard":
-  //     Content = <Dashboard />;
-  //     break;
-  //   case "blog":
-  //     Content = <BlogPost />;
-  //     break;
-  //   case "link1":
-  //     Content = <Link1 />;
-  //     break;
-  //   case "notification":
-  //     Content = <Notification />;
-  //     break;
-  //   case "logout":
-  //     Content = <Logoutmodel />;
-  //     break;
+  const context = useContext(Mycontext);
+  const {
+    walletmethod,
+    namemethod,
+    logomethod,
+    colormethod,
+    headlinemethod,
+    captionmethod,
+    domainmethod,
+    candymachinemethod,
+    nftmethod,
+    rewardmethod,
+    tokenmethod,
+    emailmethod,
+  } = context;
 
-  //   default:
-  //     Content = <Dashboard />;
-  // }
+  const getdata = async () => {
+    await axios
+      .get(`http://localhost:5000/api/${domainname}`)
+      .then((res) => setappdata(res.data.data))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getdata();
+  }, [domainname]);
+
+  walletmethod(appdata?.wallet);
+  namemethod(appdata?.appname);
+  logomethod(appdata?.applogo);
+  colormethod(appdata?.appcolor);
+  headlinemethod(appdata?.appheadline);
+  captionmethod(appdata?.appcaption);
+  domainmethod(appdata?.appsubdomain);
+  nftmethod(appdata?.nfts);
+  rewardmethod(appdata?.rewards);
+  tokenmethod(appdata?.tokenfromwallet);
+  emailmethod(appdata?.contactemails);
+  candymachinemethod(appdata?.candymachineid);
 
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -51,15 +67,14 @@ export default function HearderComponent() {
   return (
     <>
       <NavbarComponent handleDrawerToggle={handleDrawerToggle} />
-      <Sidenav 
+      <Sidenav
         mobileOpen={mobileOpen}
         handleDrawerClose={handleDrawerClose}
         handleDrawerToggle={handleDrawerToggle}
       />
 
       <Box className={classes.wrapper}>
-         
-        <Outlet/>
+        <Outlet />
       </Box>
     </>
   );

@@ -93,7 +93,14 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        maxWidth="xs"
+        style={{
+          background:
+            "linear-gradient(68.46deg, #1B194B 25.89%, #312677 72.06%)",
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -101,6 +108,7 @@ export default function SignIn() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            color: "white",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -113,7 +121,7 @@ export default function SignIn() {
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, color: "white" }}
           >
             <TextField
               margin="normal"

@@ -10,7 +10,7 @@ const NftData = ({ data }) => {
 
   const getapi = () => {
     if (data) {
-      fetch(data.uri)
+      fetch(data)
         .then((response) => response.json())
         .then((res) => {
           // console.log(res, "response");

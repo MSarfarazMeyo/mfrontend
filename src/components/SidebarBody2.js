@@ -33,6 +33,15 @@ const SidebarBody2 = () => {
     dailyrewardmethod,
     nftperdaymethod,
     emailmethod,
+
+    candymachinerror,
+    candymachinerrormethod,
+    tokenfromwalleterror,
+    tokenfromwalleterrormethod,
+    dailyrewarderror,
+    dailyrewarderrormethod,
+    emailerror,
+    emailerrormethod,
   } = context;
 
   const [em1, setem1] = useState(false);
@@ -49,10 +58,32 @@ const SidebarBody2 = () => {
   const [verify, setverify] = useState(false);
   const [show, setshow] = useState(false);
 
+  const [wallettokens, setwallettokens] = useState();
+
   const [nftperday, setnftperday] = useState();
 
   const connection = new Connection(clusterApiUrl("devnet"));
   const metaplex = new Metaplex(connection);
+
+  const findAllTokens = async () => {
+    if (publicKey) {
+      let response = connection
+        .getParsedTokenAccountsByOwner(publicKey, {
+          programId: TOKEN_PROGRAM_ID,
+        })
+        .then((data) => {
+          console.log(data, "data .....");
+          let filteredData = data?.value?.filter(
+            (item) =>
+              item?.account?.data?.parsed?.info?.tokenAmount?.decimals === 9
+          );
+
+          setwallettokens(filteredData);
+        });
+    }
+  };
+
+  console.log("token from wallet", wallettokens);
 
   const getNfts = async () => {
     console.log("working");
@@ -78,9 +109,11 @@ const SidebarBody2 = () => {
 
   React.useEffect(() => {
     getNfts();
+    findAllTokens();
   }, [wallet, publicKey, candymachin]);
 
   const handleemail = (event) => {
+    emailerrormethod(false);
     setemail(event.target.value);
     emailmethod(event.target.value);
   };
@@ -108,7 +141,7 @@ const SidebarBody2 = () => {
   };
 
   const handlecandymachine = () => {
-    if (cmid.length >= 5) {
+    if (cmid.length >= 42) {
       candymachinmethod(cmid);
     }
   };
@@ -151,10 +184,11 @@ const SidebarBody2 = () => {
   };
 
   const handleChange1 = (event) => {
+    candymachinerrormethod(false);
     setcmid(event.target.value);
-    if (event.target.value.length >= 5) {
+    if (event.target.value.length >= 44) {
       setdsable(false);
-    } else if (event.target.value.length <= 4) {
+    } else if (event.target.value.length <= 43) {
       setdsable(true);
     }
   };
@@ -241,6 +275,7 @@ const SidebarBody2 = () => {
           </Typography>
           <Box>
             <TextField
+              error={candymachinerror}
               sx={{
                 width: "45%",
                 mt: 1,
@@ -333,9 +368,16 @@ const SidebarBody2 = () => {
               label="Choose a token from your wallet"
               onChange={handleChange}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {wallettokens &&
+                wallettokens.map((elem) => (
+                  <MenuItem value={elem?.account?.data?.parsed?.info?.mint}>
+                    {(elem?.account?.data?.parsed?.info?.mint).slice(0, 15)}
+                    <span>... ( balance : </span>
+                    {elem?.account?.data?.parsed?.info?.tokenAmount?.amount /
+                      1000000000}
+                    <span>)</span>
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Box>
@@ -475,6 +517,7 @@ const SidebarBody2 = () => {
           </Typography>
 
           <TextField
+            error={emailerror}
             sx={{
               width: "100%",
               mt: 1,

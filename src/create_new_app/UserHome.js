@@ -21,7 +21,6 @@ export default function UserHome() {
   let style = {
     paddingLeft: "50px",
     paddingRight: "50px",
-    paddingTop: "40px",
   };
   let styles2 = {
     color: "white",
@@ -119,7 +118,8 @@ export default function UserHome() {
           display: "flex",
           width: "90%",
 
-          m: "40px",
+          mt: "20px",
+          mb: "20px",
           justifyContent: "space-between",
         }}
       >

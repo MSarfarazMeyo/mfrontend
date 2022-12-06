@@ -14,8 +14,13 @@ import { NavLink } from "react-router-dom";
 import { SettingsOutlined } from "@mui/icons-material";
 import { DashboardOutlined } from "@mui/icons-material";
 import { ListItem } from "@mui/material";
+import Mycontext from "../../Context/Mycontext";
 
 export default function NestedList() {
+  const context = React.useContext(Mycontext);
+
+  const { domain } = context;
+
   const [open, setOpen] = React.useState(true);
   const styles = {
     color: "white",
@@ -43,7 +48,12 @@ export default function NestedList() {
   return (
     <List sx={styles} component="nav">
       <ListItemButton sx={styles}>
-        <ListItem component={NavLink} to="/admin">
+        <ListItem
+          component={NavLink}
+          to={{
+            pathname: `/admin/${domain}`,
+          }}
+        >
           <ListItemIcon>
             <DashboardOutlined sx={styles} />
           </ListItemIcon>

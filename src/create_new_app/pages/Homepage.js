@@ -7,6 +7,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import Appbar from "../../views/Appbar";
 import "../style.css";
+import CircularProgress from "@mui/material/CircularProgress";
 import NftData from "./NftData";
 const Homepage = () => {
   const context = useContext(Mycontext);
@@ -19,6 +20,8 @@ const Homepage = () => {
     orientation,
     candymachin,
     verifiedmethod,
+    loading,
+    loadingmethod,
   } = context;
 
   const [candyNfts, setCandyNfts] = useState([]);
@@ -29,6 +32,7 @@ const Homepage = () => {
 
   const getNfts = async () => {
     if (publicKey && candymachin) {
+      loadingmethod(true);
       const nfts = await metaplex.nfts().findAllByCreator({
         creator: new PublicKey(candymachin),
         position: 1,
@@ -82,21 +86,33 @@ const Homepage = () => {
       <Grid
         container
         direction={dir}
-        sx={{ border: "2px solid #4e39d7", height: "100%", width: "100%" }}
+        height="100%"
+        overflow="hidden"
+        sx={{
+          borderRight: ".5px solid",
+          borderLeft: ".5px solid",
+          "&::-webkit-scrollbar": {
+            width: "0em",
+            height: "0em",
+          },
+        }}
       >
         <Grid
           item
           md={w1}
           xs={12}
+          overflow="hidden"
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             height: "80%",
-            paddingBottom: "2rem",
-            p: 4,
+
+            "&::-webkit-scrollbar": {
+              width: "0em",
+              height: "0em",
+            },
           }}
-          className="main-g"
         >
           <ThemeProvider theme={theme}>
             <Box mt={4}>
@@ -130,7 +146,21 @@ const Homepage = () => {
           </ThemeProvider>
         </Grid>
 
-        <Grid item md={w2} xs={12} height="100%" overflow="hidden">
+        <Grid
+          item
+          md={w2}
+          xs={12}
+          height="60vh"
+          overflow="hidden"
+          sx={{
+            borderRight: ".5px solid",
+            borderLeft: ".5px solid",
+            "&::-webkit-scrollbar": {
+              width: "0em",
+              height: "0em",
+            },
+          }}
+        >
           {/* <Box width="100%" height="300px">
             <marquee direction="up">
 
@@ -138,31 +168,71 @@ const Homepage = () => {
           </Box> */}
           {hasnfts ? (
             candyNfts && candyNfts.map((elem) => <NftData data={elem} />)
-          ) : (
+          ) : loading ? (
             <Box
-              width="100%"
-              height="150px"
-              display="flex"
-              flexDirection="column"
+              sx={{
+                display: "flex",
+
+                justifyContent: "center",
+              }}
             >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <marquee direction="up">
               <Box
                 width="100%"
-                height="80%"
-                justifyContent="center"
+                height="300px"
+                display="flex"
+                justifyContent="space-around"
+                paddingTop={2}
+                marginTop={2}
+                flexDirection="column"
                 alignItems="center"
+                paddingBottom={2}
               >
-                <Typography textAlign="center" fontWeight="bold">
-                  Your NFTs goes here
+                <Box
+                  width="80%"
+                  height="80%"
+                  bgcolor="blue"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderLeft="7px solid "
+                  borderBottom="7px solid "
+                  borderTop="2px solid "
+                  borderRight="2px solid "
+                >
+                  <Typography
+                    textAlign="center"
+                    fontWeight="bold"
+                    color={themecolor}
+                  >
+                    Your NFTs goes here
+                  </Typography>
+                </Box>
+                <Typography width="80%" height="10%" color={themecolor}>
+                  Nft Name
                 </Typography>
+                <hr style={{ width: "80%" }} />
               </Box>
-              <Typography width="100%" height="20%">
-                Nft Name
-              </Typography>
-            </Box>
+            </marquee>
           )}
         </Grid>
 
-        <Grid item md={w3} xs={12}>
+        <Grid
+          item
+          md={w3}
+          xs={12}
+          overflow="hidden"
+          sx={{
+            borderRight: ".5px solid",
+            borderLeft: ".5px solid",
+            "&::-webkit-scrollbar": {
+              width: "0em",
+              height: "0em",
+            },
+          }}
+        >
           <Box
             sx={{
               display: "flex",

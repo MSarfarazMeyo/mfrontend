@@ -1,10 +1,13 @@
 import { Box, Typography } from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import Mycontext from "../../context/Mycontext";
 
 const NftData = ({ data }) => {
   const [name, setname] = useState();
+  const context = useContext(Mycontext);
+  const { loadingmethod } = context;
 
   console.log(data, "data");
 
@@ -15,6 +18,7 @@ const NftData = ({ data }) => {
         .then((res) => {
           // console.log(res, "response");
           setname(res);
+          loadingmethod(false);
         });
     }
   };

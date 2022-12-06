@@ -11,8 +11,12 @@ import "./style.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NftData from "./NftData";
 import Mycontext from "../Context/Mycontext";
+import Animations from "./Animations";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const StackingDashboard = () => {
+  const domainname = window.location.pathname.split("/").pop();
+
   const [rewardtbtnvariant, setrewardtbtnvariant] = useState("contained");
   const [walletbtnvariant, setwalletbtnvariant] = useState("outlined");
 
@@ -23,6 +27,8 @@ const StackingDashboard = () => {
   const connection = new Connection(clusterApiUrl("devnet"));
   const metaplex = new Metaplex(connection);
   const [appdata, setappdata] = useState();
+  const [loading, setloading] = useState(false);
+
   const [walletid, setwalletid] = useState(publicKey?.toString());
 
   const context = useContext(Mycontext);
@@ -41,9 +47,11 @@ const StackingDashboard = () => {
     emailmethod,
   } = context;
 
+  console.log(walletid, "walletid");
+
   const getdata = async () => {
     await axios
-      .get(`http://localhost:5000/api/${walletid}`)
+      .get(`http://localhost:5000/api/${domainname}`)
       .then((res) => setappdata(res.data.data))
       .catch((err) => {
         console.log(err);
@@ -52,7 +60,7 @@ const StackingDashboard = () => {
 
   useEffect(() => {
     getdata();
-  }, [wallet]);
+  }, [domainname]);
 
   console.log("appdata", appdata);
 
@@ -74,16 +82,23 @@ const StackingDashboard = () => {
   console.log(candymachineid, "candymachineid");
 
   const getNfts = async () => {
-    const nft = await metaplex.nfts().findAllByCreator({
-      creator: new PublicKey(candymachineid),
-      position: 1,
-    });
+    setloading(true);
+    if (publicKey) {
+      const nft = await metaplex.nfts().findAllByOwner({ owner: publicKey });
 
-    if (nft.length > 0) {
-      setCandyNfts(nft);
-      sethasnfts(true);
-    } else {
-      sethasnfts(false);
+      const walletnfts = nft.filter(
+        (single) => single.creators[0].address.toString() === candymachineid
+      );
+
+      console.log(walletnfts, "walletnfts");
+
+      if (walletnfts.length > 0) {
+        setCandyNfts(walletnfts);
+        sethasnfts(true);
+        setloading(false);
+      } else {
+        sethasnfts(false);
+      }
     }
   };
   useEffect(() => {
@@ -184,10 +199,13 @@ const StackingDashboard = () => {
         >
           <Box width="90%" height="10%" display="flex" alignItems="center">
             <Typography color="white" fontSize="large">
+              <span style={{ opacity: "50%", marginRight: 1 }}>
+                Wallet Nfts :
+              </span>
               {candyNfts?.length}
-              <span style={{ opacity: "50%", marginLeft: 1 }}> Nfts</span>
             </Typography>
           </Box>
+          {console.log(candyNfts[0]?.uri, "candyuri")}
           <Box
             width="90%"
             height="50vh"
@@ -203,57 +221,9 @@ const StackingDashboard = () => {
             }}
           >
             {hasnfts ? (
-              candyNfts && candyNfts.map((elem) => <NftData data={elem} />)
+              candyNfts && candyNfts.map((elem) => <NftData data={elem.uri} />)
             ) : (
-              <Box
-                borderBottom={1}
-                borderColor="white"
-                height="300px"
-                width="250px"
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                >
-                  <Box height="70%" width="100%" bgcolor="blue">
-                    <img
-                      width="100%"
-                      height="98%"
-                      src={scrlimg}
-                      alt="yourNft"
-                      style={{
-                        marginLeft: "5px",
-                      }}
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    width="100%"
-                    flexDirection="column"
-                    mt={1}
-                  >
-                    <Typography variant="body" color="white">
-                      MellowMen #1512 00d:00h:00m
-                    </Typography>
-                    <Box
-                      display="flex"
-                      width="100%"
-                      justifyContent="space-between"
-                      mt={1}
-                    >
-                      <Typography variant="body" color="white">
-                        Rewards
-                      </Typography>
-                      <Typography variant="body" color="white">
-                        349674
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
+              <Animations value={"300px"} />
             )}
           </Box>
         </Grid>

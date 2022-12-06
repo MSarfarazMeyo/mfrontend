@@ -2,12 +2,15 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import Footer from "./Components/Footer";
 import HearderComponent from "./Components/Header/HearderComponent";
+import ContextStore from "./context/ContextStore";
 
 const AdminHome = () => {
   return (
     <>
-      <HearderComponent />
-      <Footer />
+      <ContextStore>
+        <HearderComponent />
+        <Footer />
+      </ContextStore>
     </>
   );
 };

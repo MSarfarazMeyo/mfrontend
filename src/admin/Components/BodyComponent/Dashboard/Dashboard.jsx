@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,12 +17,13 @@ import Section3 from "./Section3";
 import { fakeArrayGenrator } from "../../../Common/fakeDataGenetator";
 import { PageHeader } from "../../../Common/Components";
 import axios from "axios";
+import Mycontext from "../../../context/Mycontext";
 
 export default function Dashboard() {
-  const classes = useStyles();
-  const [hasFetched, setHasFetched] = useState(false);
+  const context = useContext(Mycontext);
+  const { latestentriesmethod, alltentries, alltentriesmethod } = context;
 
-  const [data, setData] = useState([]);
+  const classes = useStyles();
   const getUserData = async () => {
     const res = await axios.get(`http://localhost:5000/api`, {
       headers: {
@@ -33,7 +34,9 @@ export default function Dashboard() {
     if (res.data.status === 401 || !res.data) {
       console.log("errror");
     } else {
-      setData(res.data.data);
+      const data2 = res.data.data;
+      alltentriesmethod(data2);
+      latestentriesmethod(data2.slice(-2).reverse());
     }
   };
 
@@ -44,27 +47,24 @@ export default function Dashboard() {
   const DisplayData = [
     {
       label: "Total Entries",
-      value: data.length,
+      value: alltentries?.length,
       icon: <ArrowDropUpIcon />,
-      iconLabel: "70%",
+      iconLabel: "20%",
     },
     {
       label: "Others",
-      value: "180",
+
       icon: <ArrowDropUpIcon />,
-      iconLabel: "5.3%",
     },
     {
       label: "Others",
-      value: "450",
+
       icon: <ArrowDropDownIcon />,
-      iconLabel: "4.1%",
     },
     {
       label: "Others",
-      value: "37450",
+
       icon: <ArrowDropDownIcon />,
-      iconLabel: "2.5%",
     },
   ];
 

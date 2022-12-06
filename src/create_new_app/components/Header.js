@@ -31,13 +31,12 @@ const Header = () => {
     <AppBar
       position="sticky"
       elevation={0}
+      bgcolor=" "
       sx={{
-        backgroundColor: "#14121F",
-        border: "2px solid #6D6DFC",
         zIndex: 0,
       }}
     >
-      <Paper>
+      <Paper square>
         <Toolbar>
           <Grid
             container
@@ -79,8 +78,13 @@ const Header = () => {
                   </Typography>
                   <Typography marginLeft={2}>
                     {" "}
-                    <Button size="small" color="secondary" variant="outlined">
-                      Connect Wallete
+                    <Button
+                      size="small"
+                      color="secondary"
+                      variant="contained"
+                      sx={{ color: "white", fontFamily: "Poppins" }}
+                    >
+                      Connect Wallet
                     </Button>
                   </Typography>
                 </ThemeProvider>

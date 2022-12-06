@@ -3,9 +3,16 @@ import TextField from "@mui/material/TextField";
 import React, { useContext, useState } from "react";
 import { Typography, Button } from "@mui/material";
 import Mycontext from "../context/Mycontext";
-
+import Modal from "@mui/material/Modal";
 import { SketchPicker } from "react-color";
 import CloseIcon from "@mui/icons-material/Close";
+
+const style = {
+  position: "absolute",
+  top: "40%",
+  left: "10%",
+  transform: "translate(-50%, -50%)",
+};
 
 const SidebarBody = () => {
   const context = useContext(Mycontext);
@@ -19,6 +26,14 @@ const SidebarBody = () => {
     yourappthemecolor,
     yourappthememode,
     yourapporientation,
+    appnameerror,
+    appnameerrormethod,
+    headlineerror,
+    headlineerrormethod,
+    domainerror,
+    domainerrormethod,
+    logoerror,
+    logoerrormethod,
   } = context;
   // const [state, setstate] = React.useState({
   //   appname: "",
@@ -33,16 +48,23 @@ const SidebarBody = () => {
   const [subdomain, setsubdomain] = useState("");
   const [image, setImage] = useState(null);
   const [imageurl, setImageurl] = useState(null);
+  const [colorbutton, setcolorbutton] = useState(false);
 
   const [currentcolor, setcurrentcolor] = useState("#ff6");
   const [backGroundColor, setBackGroundColor] = useState("");
   const [picker, setpicker] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const handlesketchpicker = () => {
     setpicker(true);
   };
 
   const handlechange = (color) => {
     setcurrentcolor(color.hex);
+    setcolorbutton(true);
     yourappthemecolor(color.hex);
   };
   const styles = {
@@ -70,6 +92,14 @@ const SidebarBody = () => {
       fontFamily: "Poppins",
     },
   };
+  const errorstyle = {
+    width: "100%",
+    "&.MuiButton-outlined": {
+      border: "2px solid #FF0000 ",
+      color: "red ",
+      fontFamily: "Poppins",
+    },
+  };
 
   const [currentButtonVariant, setCurrentButtonVariant] = useState("outlined");
   const [currentButtonVariant2, setCurrentButtonVariant2] =
@@ -80,11 +110,13 @@ const SidebarBody = () => {
     useState("contained");
 
   const handleChange1 = (event) => {
+    appnameerrormethod(false);
     setappname(event.target.value);
     yourappname(event.target.value);
   };
 
   const handleChange2 = (event) => {
+    headlineerrormethod(false);
     setappheadline(event.target.value);
     yourappheadline(event.target.value);
   };
@@ -95,11 +127,13 @@ const SidebarBody = () => {
   };
 
   const handleChange4 = (event) => {
+    domainerrormethod(false);
     setsubdomain(event.target.value);
     yourappsubdomain(event.target.value);
   };
 
   const handlelogo = (event) => {
+    logoerrormethod(false);
     if (event.target.files && event.target.files[0]) {
       setImageurl(event.target.files[0]);
       setImage(URL.createObjectURL(event.target.files[0]));
@@ -255,7 +289,11 @@ const SidebarBody = () => {
             </span>
           </Typography>
 
-          <Button variant="outlined" component="label" sx={styles2}>
+          <Button
+            variant="outlined"
+            component="label"
+            sx={logoerror ? errorstyle : styles2}
+          >
             Upload
             <input
               hidden
@@ -265,6 +303,9 @@ const SidebarBody = () => {
               onChange={handlelogo}
             />
           </Button>
+          {logoerror ? (
+            <Typography color="red"> Logo Required</Typography>
+          ) : null}
         </Box>
 
         <Box
@@ -299,6 +340,7 @@ const SidebarBody = () => {
           </Typography>
 
           <TextField
+            error={appnameerror}
             sx={{
               width: "100%",
               mt: 1,
@@ -314,6 +356,9 @@ const SidebarBody = () => {
             value={appname}
             onChange={handleChange1}
           />
+          {appnameerror ? (
+            <Typography color="red"> Name Required</Typography>
+          ) : null}
         </Box>
 
         <Box
@@ -345,20 +390,33 @@ const SidebarBody = () => {
               justifyContent: "center",
             }}
           >
-            {picker ? (
-              <Box sx={{ display: "flex" }}>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
                 <SketchPicker
                   color={currentcolor}
                   onChangeComplete={handlechange}
                 ></SketchPicker>
-                <CloseIcon color="info" onClick={() => setpicker(false)} />
               </Box>
-            ) : null}
+            </Modal>
           </Box>
-          <Button onClick={handlesketchpicker} sx={styles2} variant="outlined">
-            {" "}
-            Pick Color
-          </Button>
+          {colorbutton ? (
+            <Button onClick={handleOpen} sx={styles2} variant="outlined">
+              <Typography sx={{ paddingRight: "20px" }}>
+                {currentcolor}
+              </Typography>
+              <Box width="50%" height="30px" bgcolor={currentcolor}></Box>
+            </Button>
+          ) : (
+            <Button onClick={handleOpen} sx={styles2} variant="outlined">
+              {" "}
+              Pick Color
+            </Button>
+          )}
         </Box>
 
         <Box
@@ -431,6 +489,7 @@ const SidebarBody = () => {
           </Typography>
 
           <TextField
+            error={headlineerror}
             multiline
             rows={3}
             maxRows={4}
@@ -451,6 +510,9 @@ const SidebarBody = () => {
             value={appheadline}
             onChange={handleChange2}
           />
+          {headlineerror ? (
+            <Typography color="red"> Headline Required</Typography>
+          ) : null}
         </Box>
         <Box
           sx={{
@@ -531,6 +593,7 @@ const SidebarBody = () => {
           </Typography>
 
           <TextField
+            error={domainerror}
             sx={{
               width: "100%",
               height: "100%",
@@ -546,6 +609,9 @@ const SidebarBody = () => {
             value={subdomain}
             onChange={handleChange4}
           />
+          {domainerror ? (
+            <Typography color="red"> Domain Required</Typography>
+          ) : null}
         </Box>
       </Box>
     </div>

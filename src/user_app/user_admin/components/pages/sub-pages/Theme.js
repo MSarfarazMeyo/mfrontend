@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid, Input, Typography, Button, TextField } from "@mui/material";
 import { SketchPicker } from "react-color";
 import CloseIcon from "@mui/icons-material/Close";
-import Mycontext from "../../../../Context/Mycontext";
+import Mycontext from "../../../Context/Mycontext";
 
 import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -38,10 +38,12 @@ const styles2 = {
   },
 };
 const Theme = () => {
+  const domainname = window.location.pathname.split("/").pop();
+
   const { publicKey } = useWallet();
 
   const context = useContext(Mycontext);
-  const { walletidd, color, logo, headline, caption } = context;
+  const { walletidd, color, logo, headline, caption, domain } = context;
   const [walletid, setwalletid] = useState(publicKey?.toString());
   const [display, setDisplay] = useState(true);
   const [image, setImage] = useState(null);
@@ -79,21 +81,23 @@ const Theme = () => {
     setappcaption(event.target.value);
   };
 
-  const updatedata = async (e) => {
-    e.preventDefault();
+  console.log("store domain", domain);
+
+  const updateText = async () => {
     var formData = new FormData();
     formData.append("applogo", image);
     formData.append("appcolor", currentcolor);
     formData.append("appheadline", appheadline);
     formData.append("appcaption", appcaption);
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+
+    const data = {
+      appcolor: currentcolor,
+      appheadline: appheadline,
+      appcaption: appcaption,
     };
 
     await axios
-      .patch(`http://localhost:5000/api/${walletid}`, formData, config)
+      .patch(`http://localhost:5000/api/${domain}`, data)
       .then((res) => {
         console.log(res);
         alert("data Updated successfully");
@@ -101,6 +105,35 @@ const Theme = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+  const updateImage = async () => {
+    var formData = new FormData();
+    formData.append("applogo", image);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    await axios
+      .patch(`http://localhost:5000/api/logo/${domain}`, formData, config)
+      .then((res) => {
+        console.log(res);
+        alert("data Updated successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const updatedata = (e) => {
+    e.preventDefault();
+    updateText();
+
+    if (image) {
+      updateImage();
+    }
   };
 
   return (

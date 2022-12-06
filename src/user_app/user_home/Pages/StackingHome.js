@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import scrlimg from "../assets/scrlimg.png";
 import scrlimg2 from "../assets/scrlimg2.png";
 import "./style.css";
+import Animations from "./Animations";
+import Mycontext from "../Context/Mycontext";
+
+import { Metaplex } from "@metaplex-foundation/js";
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import NftData from "./NftData";
 
 const StackingHome = () => {
+  const context = useContext(Mycontext);
+  const { candymachineid } = context;
+
+  const [hasnfts, sethasnfts] = useState(false);
+  const [candyNfts, setCandyNfts] = useState([]);
+  const connection = new Connection(clusterApiUrl("devnet"));
+  const metaplex = new Metaplex(connection);
+
+  const getNfts = async () => {
+    const nft = await metaplex.nfts().findAllByCreator({
+      creator: new PublicKey(candymachineid),
+      position: 1,
+    });
+
+    if (nft.length > 0) {
+      setCandyNfts(nft);
+      sethasnfts(true);
+    } else {
+      sethasnfts(false);
+    }
+  };
+  useEffect(() => {
+    getNfts();
+  }, [candymachineid]);
+
   return (
     <>
       <Grid container height="100%">
@@ -46,145 +78,36 @@ const StackingHome = () => {
           xs={4}
           display="flex"
           justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
           height="100%"
           overflow="hidden"
           sx={{ borderRight: 1, borderColor: "#FFFFFF" }}
         >
-          <Box width="80%" height="100px">
-            <marquee direction="up">
-              <Box
-                borderTop={1}
-                borderColor="white"
-                height="100%"
-                width="100%"
-                alignSelf="center"
-                marginBottom={2}
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  mt={2}
-                >
-                  <Box height="85%" width="100%" bgcolor="blue">
-                    <img
-                      width="100%"
-                      height="98%"
-                      src={scrlimg}
-                      alt="yourNft"
-                      style={{
-                        marginLeft: "10px",
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="h4" color="white">
-                    MellowMen #1788
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                borderTop={1}
-                borderColor="white"
-                height="100%"
-                width="100%"
-                alignSelf="center"
-                marginTop={2}
-                marginBottom={2}
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  mt={2}
-                >
-                  <Box height="85%" width="100%" bgcolor="blue">
-                    <img
-                      width="100%"
-                      height="98%"
-                      src={scrlimg2}
-                      alt="yourNft"
-                      style={{
-                        marginLeft: "10px",
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="h4" color="white">
-                    MellowMen #1788
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                borderTop={1}
-                borderColor="white"
-                height="100%"
-                width="100%"
-                alignSelf="center"
-                marginTop={2}
-                marginBottom={2}
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  mt={2}
-                >
-                  <Box height="85%" width="100%" bgcolor="blue">
-                    <img
-                      width="100%"
-                      height="98%"
-                      src={scrlimg}
-                      alt="yourNft"
-                      style={{
-                        marginLeft: "10px",
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="h4" color="white">
-                    MellowMen #1788
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                borderTop={1}
-                borderColor="white"
-                height="100%"
-                width="100%"
-                alignSelf="center"
-                marginTop={2}
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  mt={2}
-                >
-                  <Box height="85%" width="100%" bgcolor="blue">
-                    <img
-                      width="100%"
-                      height="98%"
-                      src={scrlimg}
-                      alt="yourNft"
-                      style={{
-                        marginLeft: "10px",
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="h4" color="white">
-                    MellowMen #1788
-                  </Typography>
-                </Box>
-              </Box>
-            </marquee>
+          <Typography color="white" fontSize="large">
+            <span style={{ opacity: "50%", marginRight: 1 }}>Total Nfts :</span>
+            {candyNfts?.length}
+          </Typography>
+          <Box
+            width="100%"
+            height="100%"
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="center"
+            gap={2}
+            sx={{
+              overflowY: "scroll",
+              "&::-webkit-scrollbar": {
+                width: "0em",
+                height: "0em",
+              },
+            }}
+          >
+            {hasnfts ? (
+              candyNfts && candyNfts.map((elem) => <NftData data={elem.uri} />)
+            ) : (
+              <Animations value={"300px"} />
+            )}
           </Box>
         </Grid>
         <Grid

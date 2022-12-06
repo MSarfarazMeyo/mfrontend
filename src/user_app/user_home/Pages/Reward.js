@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
 import { Button, Grid, Typography, Box, Paper, Stack } from "@mui/material";
+import Mycontext from "../Context/Mycontext";
 
 const Reward = () => {
+  const context = useContext(Mycontext);
+  const { rewards } = context;
+
+  console.log(rewards, "rewards");
+
   return (
     <>
       <Box
@@ -22,7 +28,7 @@ const Reward = () => {
           Todays Reward
         </Typography>
         <Box sx={{ display: "flex", gap: "10px", mt: 2, alignItems: "center" }}>
-          <Typography fontSize="50px">0 </Typography>
+          <Typography fontSize="50px">{rewards} </Typography>
           <Typography fontSize="small" variant="body1" sx={{ opacity: "50%" }}>
             $FLINT
           </Typography>

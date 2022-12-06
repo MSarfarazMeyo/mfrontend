@@ -11,16 +11,61 @@ const ContextStore = ({ children }) => {
   const [logo, setlogo] = useState(null);
   const [logo2, setlogo2] = useState(null);
   const [themecolor, setthemecolor] = useState("#2B2D2F");
-  const [thememode, setthememode] = useState("light");
-  const [orientation, setorientation] = useState(true);
-  const [mobileview, setmobileview] = useState(true);
+  const [thememode, setthememode] = useState("dark");
+  const [orientation, setorientation] = useState(false);
+  const [mobileview, setmobileview] = useState(false);
   const [verified, setverified] = useState(false);
-  const [candymachin, setcandymachin] = useState();
-  const [tokenfromwallet, settokenfromwallet] = useState();
+  const [candymachin, setcandymachin] = useState("");
+  const [tokenfromwallet, settokenfromwallet] = useState("");
   const [nftperday, setnftperday] = useState();
   const [dailyreward, setdailyreward] = useState("");
-  const [email, setemail] = useState();
+  const [email, setemail] = useState("");
   const [adminlogedin, setadminlogedin] = useState(false);
+  const [appnameerror, setappnameerror] = useState(false);
+
+  const [headlineerror, appheadlineerror] = useState(false);
+
+  const [domainerror, setdomainerror] = useState(false);
+
+  const [logoerror, setlogoerror] = useState(false);
+  const [candymachinerror, setcandymachinerror] = useState(false);
+  const [tokenfromwalleterror, settokenfromwalleterror] = useState(false);
+  const [dailyrewarderror, setdailyrewarderror] = useState(false);
+  const [emailerror, setemailerror] = useState(false);
+  const [loading, setloading] = useState(false);
+
+  const loadingmethod = (val) => {
+    setloading(val);
+  };
+
+  const candymachinerrormethod = (val) => {
+    setcandymachinerror(val);
+  };
+  const tokenfromwalleterrormethod = (val) => {
+    settokenfromwalleterror(val);
+  };
+  const dailyrewarderrormethod = (val) => {
+    setdailyrewarderror(val);
+  };
+  const emailerrormethod = (val) => {
+    setemailerror(val);
+  };
+
+  const logoerrormethod = (val) => {
+    setlogoerror(val);
+  };
+
+  const headlineerrormethod = (val) => {
+    appheadlineerror(val);
+  };
+
+  const domainerrormethod = (val) => {
+    setdomainerror(val);
+  };
+
+  const appnameerrormethod = (val) => {
+    setappnameerror(val);
+  };
 
   const nftperdaymethod = (val) => {
     setnftperday(val);
@@ -120,6 +165,24 @@ const ContextStore = ({ children }) => {
         nftperdaymethod,
         email,
         emailmethod,
+        appnameerror,
+        appnameerrormethod,
+        headlineerror,
+        headlineerrormethod,
+        domainerror,
+        domainerrormethod,
+        logoerror,
+        logoerrormethod,
+        candymachinerror,
+        candymachinerrormethod,
+        tokenfromwalleterror,
+        tokenfromwalleterrormethod,
+        dailyrewarderror,
+        dailyrewarderrormethod,
+        emailerror,
+        emailerrormethod,
+        loading,
+        loadingmethod,
       }}
     >
       {children}

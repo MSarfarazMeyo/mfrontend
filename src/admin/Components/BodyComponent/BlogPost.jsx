@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -24,11 +24,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TableDataShow from "./Dashboard/TableDataShow";
+import Mycontext from "../../context/Mycontext";
 
 export default function BlogPost() {
   const classes = useStyles();
   const [Fetched, setFetched] = useState(false);
   const [Posts, setPosts] = useState([]);
+  const context = useContext(Mycontext);
+  const { alltentries } = context;
 
   //calling posts api
   // useEffect(() => {
@@ -40,28 +44,7 @@ export default function BlogPost() {
   //     });
   // }, [Fetched]);
 
-  const [data, setData] = useState([]);
-  console.log(data);
-
   // https.get(`${baseUrl}/post?limit=${limit}`);
-
-  const getUserData = async () => {
-    const res = await axios.get(`http://localhost:5000/api`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (res.data.status === 401 || !res.data) {
-      console.log("errror");
-    } else {
-      setData(res.data.data);
-    }
-  };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
 
   return (
     <Box mt={2}>
@@ -115,46 +98,7 @@ export default function BlogPost() {
           ))
         )}
       </Grid> */}
-
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Logo</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Headline</TableCell>
-              <TableCell>Caption</TableCell>
-              <TableCell>Subdomain</TableCell>
-              <TableCell>Color</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  <Avatar
-                    width="10%"
-                    alt="Cindy Baker"
-                    src={`http://localhost:5000/${row.applogo}`}
-                  />
-                </TableCell>
-                <TableCell>{row.appname}</TableCell>
-                <TableCell>{row.appheadline}</TableCell>
-                <TableCell>{row.appcaption}</TableCell>
-                <TableCell>{row.appsubdomain}</TableCell>
-                <TableCell align="center">
-                  <Box width="20px%" height="15px" bgcolor={row.appcolor}>
-                    color
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <TableDataShow latestData={alltentries} />
     </Box>
   );
 }

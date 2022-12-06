@@ -20,7 +20,10 @@ const style = {
 export default function Logoutmodel() {
   const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    navigate("/admin");
+  };
 
   const navigate = useNavigate();
 
